@@ -1,4 +1,4 @@
-##### groocy-internship Assignment
+### groocy-internship Assignment
 
 ### Task Objective: Check familiarity with Oscar.
 There are 2 Tasks. You can choose either one.
@@ -40,4 +40,5 @@ Your Task is:
 ### Happy Developing!!
 
 > ***Technology :*** Django, Oscar, HTML5 , CSS3, JS, JQuery
+
 if you cannot move ahead of shipping addresss. Try adding your PINCODE in admin panel.
