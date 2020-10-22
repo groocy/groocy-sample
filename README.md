@@ -40,3 +40,4 @@ Your Task is:
 ### Happy Developing!!
 
 > ***Technology :*** Django, Oscar, HTML5 , CSS3, JS, JQuery
+if you cannot move ahead of shipping addresss. Try adding your PINCODE in admin panel.
