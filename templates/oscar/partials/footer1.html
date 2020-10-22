@@ -1,0 +1,38 @@
+{% load static %}
+<footer class="footer">
+    {% block footer %}
+    <div class="footer-bg" style="padding-top: 35px !important;">
+        <div class="container">
+        	<div class="col-md-3">
+      			<h4 class="mb-5 mt-0 white-txt fth">Get to Know Us</h4>
+        			<ul class="footer-menu">
+                <li><a href="/about/">About Us</a></li>
+                <li><a href="/contact-us/">Contact Us</a></li>
+                <li><a href="/help/">Help</a></li>
+                <li><a href="/terms-condition/">Terms & Conditions</a></li>   
+              </ul>
+          </div>
+          <div class="col-md-3">
+            <h4 class="mb-5 mt-0 white-txt fth">Connect with Us</h4>
+              <ul class="footer-menu">
+                <li><a href="https://www.facebook.com/" target="_blank">Facebook</a></li>
+                <li><a href="https://twitter.com/explore" target="_blank">Twitter</a></li>
+                <li><a href="https://www.instagram.com/" target="_blank">Instagram</a></li>
+              </ul>
+          </div>
+          <div class="col-md-3">
+            <h4 class="mb-5 mt-0 white-txt fth">Let Us Help You</h4>
+              <ul class="footer-menu">
+                <li><a href="{% static 'pdfs/sample.pdf' %}" target="_blank">Create Account</a></li>
+                <li><a href="{% static 'pdfs/sample.pdf' %}" target="_blank">Manage Account</a></li>
+                <li><a href="{% static 'pdfs/sample.pdf' %}" target="_blank">Delete Account</a></li> 
+                <li><a href="{% static 'pdfs/sample.pdf' %}" target="_blank">Order Item</a></li>
+              </ul>
+          </div>
+          <div class="col-md-3">
+            <img class="full-img" src="{% static 'img/map.png' %}">
+          </div>
+      </div>
+    </div>
+    {% endblock %}
+</footer>

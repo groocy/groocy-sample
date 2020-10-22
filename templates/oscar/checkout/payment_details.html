@@ -1,0 +1,47 @@
+{% extends "oscar/checkout/checkout.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Payment details" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'oscar/checkout/nav.html' with step=3 %}
+{% endblock %}
+
+{% block order_contents %}{% endblock %}
+{% block shipping_address %}{% endblock %}
+{% block shipping_method %}{% endblock %}
+{% block payment_method %}{% endblock %}
+
+{% block payment_details %}
+    <div class="row">
+        <div class="col-md-4">
+    <h3>{% trans "Please confirm your payment method" %}</h3>
+    <form action="{% url 'checkout:preview' %}" method="post">
+        {% csrf_token %}
+        <label for="cash_on_delivery">Cash on Delivery</label>
+        {% ifequal payment_method "Cash on delivery" %}
+            <input type="radio" name="payment-method" id="cash_on_delivery" value="Cash on delivery" checked><br>
+        {% else %}
+            <input type="radio" name="payment-method" id="cash_on_delivery" value="Cash on delivery"><br>
+        {% endifequal %}
+        <label for="paytm">Paytm</label>
+        {% ifequal payment_method "Paytm" %}
+            <input type="radio" name="payment-method" id="paytm" value="Paytm" checked><br>
+        {% else %}
+            <input type="radio" name="payment-method" id="paytm" value="Paytm"><br>
+        {% endifequal %}
+        <input type="submit" value="Confirm" class="btn btn-primary btn-small">
+    </form>
+    </div>
+    <div class="col-md-8">
+            <img src="https://secureservercdn.net/184.168.47.225/04d.0a6.myftpupload.com/wp-content/uploads/2016/11/debit-card-1170x480.jpg" class="full-img">
+    </div>
+    </div>
+    <style type="text/css">
+        .full-img{
+            width: 100%;
+        }
+    </style>
+{% endblock payment_details %}

@@ -1,0 +1,24 @@
+{% load currency_filters %}
+{% load i18n %}
+<div class="col-md-4 ">
+<div class="basket-mini  hidden-xs vertical-middle mr-3 text-right">
+    <span class="mr-2">
+
+    <strong>{% trans "Basket total:" %}</strong>
+    {% if request.basket.is_tax_known %}
+        {{ request.basket.total_incl_tax|currency:request.basket.currency }}
+    {% else %}
+        {{ request.basket.total_excl_tax|currency:request.basket.currency }}
+    {% endif %}
+
+  </span>
+    <span class="btn-group pull-right">
+        <a class="btn btn-light" href="{% url 'basket:summary' %}">{% trans "View basket" %}</a>
+
+        <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"></button>
+        <div class="dropdown-menu dropdown-menu-right" style="min-width: 300px;">
+          {% include "oscar/basket/partials/basket_quick.html" %}
+        </div>
+    </span>
+</div>
+</div>

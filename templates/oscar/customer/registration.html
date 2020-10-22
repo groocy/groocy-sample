@@ -1,0 +1,62 @@
+{% extends "oscar/login-layout.html" %}
+
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Register' %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+        </li>
+        <li class="active">{% trans 'Register' %}</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+      <div class="col-md-3"></div>
+        <div class="col-md-6 register_form">
+            <!-- <form id="register_form" method="post" class="form-stacked">
+=======
+            <form id="register_form" method="post" class="form-stacked">
+>>>>>>> payment-gateway-integration
+                {% csrf_token %}
+                {% include "oscar/partials/form_fields.html"  %}
+                <button name="registration_submit" type="submit" value="Register" class="btn btn-primary btn-lg" data-loading-text="{%trans 'Registering...' %}">{% trans 'Register' %}</button>
+                {% if cancel_url %}
+                    {% trans "or" %} <a href="{{ cancel_url }}">{% trans "cancel" %}</a>.
+                {% endif %}
+<<<<<<< HEAD
+            </form> -->
+            <form method="post">
+              {% csrf_token %}
+              {% for field in form %}
+                <p>
+                  {{ field.label_tag }}<br>
+                  {{ field }}
+                  {% for error in field.errors %}
+                    <p style="color: red">{{ error }}</p>
+                  {% endfor %}
+                </p>
+              {% endfor %}
+              <h5 style="color:#009a00" >(Password should be like : name@123)</h1>
+              <button type="submit" class="btn btn-lg btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+<style type="text/css">
+.register_form {
+    background-color: #fff;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+.register_form input {
+    width: 100%;
+    height: 35px;
+    padding: 8px;
+}
+</style>
+{% endblock content %}

@@ -1,0 +1,42 @@
+{% load static %}
+{% load i18n %}
+{% load product_tags %}
+
+{% with products_sliced=products|slice:":6" %}
+    {% if products_sliced %}
+    <hr>
+        <div class="sub-header px-5">
+            <h2 class="h4  text-muted font-weight-bold">{% trans 'Products you recently viewed' %}</h2>
+        </div>
+<!-- <div class="container bg-white overflow-hidden">
+
+        <ul class="row">
+            {% for product in products_sliced %}
+                <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
+            {% endfor %}
+        </ul>
+      </div> -->
+<div class="mx-5 bg-white">
+  <div id="sync3" class="owl-carousel">
+    {% for product in products_sliced %}
+    <div class="item">{% render_product product %}</div>
+  {%  endfor %}
+  </div>
+
+</div>
+    {% endif %}
+    <script src="{% static 'oscar/js/select2.min.js' %}"></script>
+    <script src="{% static 'oscar/js/owl.carousel.js' %}"></script>
+<script>
+    $("#sync3").owlCarousel({
+      items: 5,
+      slideSpeed: 1000,
+      pagination: false,
+      navigation: true,
+      dots: true,
+      nav: true,
+      navigationText: ["<i class='mdi mdi-chevron-left'></i>", "<i class='mdi mdi-chevron-right'></i>"],
+      responsiveRefreshRate: 200,
+    });
+</script>
+{% endwith %}

@@ -1,0 +1,26 @@
+<form action="#" method="post" id="otp_form">
+	{% csrf_token %}
+    <label for="otp">OTP: </label>
+    <input type="text" id="otp" name="otp" >
+    <input type="submit" id="submitButton"  name="submitButton" value="Submit">
+</form>
+<script type="text/javascript">
+	$("#otp_form").submit(function(event) {
+
+      /* stop form from submitting normally */
+      event.preventDefault();
+
+      /* get the action attribute from the <form action=""> element */
+      var $form = $( this ),
+          url = $form.attr( 'action' );
+
+      /* Send the data using post with element id name and name2*/
+      var posting = $.post( url, { otp: $('#otp').val()} );
+
+      /* Alerts the results */
+      posting.done(function( data ) {
+        alert('success');
+      });
+
+    });
+</script>

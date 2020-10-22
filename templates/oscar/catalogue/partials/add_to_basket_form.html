@@ -1,0 +1,45 @@
+{% load basket_tags %}
+{% load display_tags %}
+{% load i18n %}
+{% load purchase_info_tags %}
+
+{% purchase_info_for_product request product as session %}
+
+{% if session.availability.is_available_to_buy %}
+
+
+    <!-- {% basket_form request product as basket_form %} -->
+    <form id="add_to_basket_form" action="{% url 'basket:add' pk=product.pk  %}" method="post" class="add-to-basket p-0 row">
+        {% csrf_token %}
+        {% include "oscar/partials/form_fields.html" with form=basket_form %}
+    </form>
+    <div class="container d-flex mx-auto">
+      <button type="submit" form="add_to_basket_form" class="btn btn-secondary py-3 px-5" value="{% trans "Add to basket" %}" data-loading-text="{% trans 'Adding...' %}"><i class="mdi mdi-cart-outline mr-2"></i> {% trans "Add to basket" %}</button>
+
+    {% iffeature "wishlists" %}
+        {% include "oscar/catalogue/partials/add_to_wishlist.html" %}
+    {% endiffeature %}
+</div>
+{% else %}
+<div class="row">
+  <div class="col-6">
+
+    {% if has_active_alert %}
+        <p>{% trans "You have an active stock alert for this product." %}</p>
+    {% else %}
+        <form id="alert_form" method="post" action="{% url 'customer:alert-create' pk=product.id %}" class="add-to-basket">
+            {% csrf_token %}
+            <p>{% trans "You can get an email alert when this product is back in stock." %}</p>
+            {% include "oscar/partials/form_fields.html" with form=alert_form %}
+            <button type="submit" class="btn btn-lg btn-info btn-add-to-basket" data-loading-text="{% trans 'Submitting...' %}">{% trans "Notify me" %}</button>
+        </form>
+    {% endif %}
+  </div>
+  <div class="col-6">
+
+    {% iffeature "wishlists" %}
+        {% include "oscar/catalogue/partials/add_to_wishlist.html" %}
+    {% endiffeature %}
+  </div>
+  </div>
+{% endif %}

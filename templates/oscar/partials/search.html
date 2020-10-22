@@ -1,0 +1,29 @@
+{% load i18n %}
+<div class="col-md-5">
+<form method="get" action="{% url 'search:search' %}" class="navbar-form search-form-with align-middle">
+  <div class="row flex align-items-center">
+    <div class=" col-md-9 p-0">
+        {{ search_form.q }}
+    </div>
+    <input type="submit" value="{% trans 'Search' %}" class="btn col-md-2 py-2 search-btn btn-primary font-weight-bold" />
+  </div>
+</form>
+</div>
+<style type="text/css">
+#id_q {
+	width: 100%;
+	border-radius: 5px 0px 0px 5px;
+}
+@media only screen and (max-width: 760px) {
+.search-form-with {
+    padding: 0px 30px;
+}
+#id_q {
+	width: 75%;
+    float: left;
+}
+input.btn.btn-default.search-btn {
+    width: 25%;
+}
+}
+</style>

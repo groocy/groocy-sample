@@ -1,0 +1,51 @@
+{% load display_tags %}
+{% load i18n %}
+{% load image_tags %}
+{% load reviews_tags %}
+<style media="screen">
+.product:hover .product-header img{
+    transform: scale(1.09);
+    transition-duration: 0.4s;
+  }
+</style>
+{% block product %}
+    <article class="card shadow-sm rounded text-center my-2 product">
+        {% block product_image %}
+            <div class="image_container text-center mt-2 product-header">
+                {% with image=product.primary_image %}
+                    {% oscar_thumbnail image.original "x155" upscale=False as thumb %}
+                    <a href="{{ product.get_absolute_url }}">
+                        <img src="{{ thumb.url }}" alt="{{ product.get_title|truncatewords:4 }}" class=" img-fluid">
+                    </a>
+                {% endwith %}
+            </div>
+        {% endblock %}
+
+        {% block product_review %}
+            {% iffeature "reviews" %}
+                <p class="star-rating {{ product.rating|as_stars}} mx-auto d-flex">
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                </p>
+            {% endiffeature %}
+        {% endblock %}
+
+        {% block product_title %}
+            <div class="lead"><a href="{{ product.get_absolute_url }}" title="{{ product.get_title }}">{{ product.get_title|truncatewords:4 }}</a></div>
+        {% endblock %}
+
+        {% block product_price %}
+            <div class="product_price font-weight-bold">
+                {% include "oscar/catalogue/partials/stock_record.html" %}
+                {% if not product.is_parent and not product.has_options %}
+                    {% include "oscar/catalogue/partials/add_to_basket_form_compact.html" %}
+                {% else %}
+                    {% include "oscar/catalogue/partials/add_to_basket_form_compact.html" %}
+                {% endif %}
+            </div>
+        {% endblock %}
+    </article>
+{% endblock %}

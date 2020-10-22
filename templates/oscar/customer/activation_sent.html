@@ -1,0 +1,54 @@
+{% extends "oscar/login-layout.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Login or register' %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+        </li>
+        <li class="active">{% trans 'Account Verification' %}</li>
+    </ul>
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6 login_otp_form">
+          <h4>OTP Has Been Sent On Your Mobile Number:</h4>
+            <form method="post">
+              {% csrf_token %}
+              {% for field in form %}
+                <p>
+                  {{ field.label_tag }}<br>
+                  {{ field }}
+                  {% if field.help_text %}
+                  {% endif %}
+                  {% if request.session.wrong_otp %}
+                    <p style="color: red">Wrong OTP! Please Enter A Valid OTP</p>
+                  {% endif %}
+                </p>
+              {% endfor %}
+              <button type="submit" class="btn btn-lg btn-primary">Verify</button>
+            </form>
+        </div>
+    </div>
+<style type="text/css">
+.login_otp_form {
+    background-color: #fff;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+.login_otp_form input {
+    width: 100%;
+    height: 35px;
+    padding: 8px;
+}
+</style>
+{% endblock content %}

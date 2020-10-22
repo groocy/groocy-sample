@@ -1,0 +1,60 @@
+{% extends "oscar/catalogue/browse-category.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    {{ category.name }} | {{ block.super }}
+{% endblock %}
+
+{% block description %}
+    {{ category.description|default:""|striptags }}
+{% endblock %}
+
+{% block header%}
+<div class="row flex jumbotron align-items-center text-white p-3 rounded mb-0" style="background:#2d3d54;">
+  <div class="col-md-3  ">
+    <img src="{% static 'img/logo.png' %}" alt="Grocery.in" class="img-fluid">
+  </div>
+  <div class="col-md-9 lead font-weight-bold text-right">
+    Quality and Freshness Guaranteed! Good Health.
+  </div>
+</div>
+<div class="row">
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb h6 my-0 col-auto bg-light">
+        <li class="breadcrumb-item">
+            <a href="{{ homepage_url }}"><span class="mdi mdi-home"> {% trans "Home" %}</a>
+        </li>
+        {% for category in category.get_ancestors %}
+            <li class="breadcrumb-item">
+                <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+            </li>
+        {% endfor %}
+        <li class="active breadcrumb-item">{{ category.name }}</li>
+    </ul>
+{% endblock breadcrumbs %}
+    <div class="page-header action my-2 col text-right">
+        {% if user.is_staff %}
+            <a class="pull-right hidden-xs" href="{% url 'dashboard:catalogue-category-update' pk=category.id %}"><small><i class="icon-edit"></i> {% trans "Edit this category" %}</small></a>
+        {% endif %}
+      </div>
+  </div>
+  <div class="h5 mt-0">{% block headertext %}{{ category.name }}{% endblock %}</div>
+{% endblock %}
+
+
+
+{% block content %}
+
+    {% if category.description %}
+        <!-- <div class="row">
+            <div class="col-sm-9"><p>{{ category.description|safe }}</p></div>
+            {% if category.image %}
+                <div class="col-sm-3"><img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-responsive" /></div>
+            {% endif %}
+        </div> -->
+    {% endif %}
+
+    {{ block.super }}
+{% endblock %}

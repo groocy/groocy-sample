@@ -1,0 +1,82 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en-gb' }}" class="{% block html_class %}no-js{% endblock %}">
+
+<head>
+  <title>{% block title %}{{ shop_name }} - {{ shop_tagline }}{% endblock %}</title>
+
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="created" content="{% now 'jS M Y h:i' %}" />
+  <meta name="description" content="{% block description %}{% endblock %}" />
+  <meta name="viewport" content="{% block viewport %}width=device-width{% endblock %}" />
+  <meta name="robots" content="NOARCHIVE,NOCACHE" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+   <link href="{% static 'oscar/css/design-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'oscar/css/select2.css' %}" rel="stylesheet">
+  <link href="{% static 'oscar/css/theme.css' %}" rel="stylesheet">
+  <link href="{% static 'oscar/css/owl.carousel.css' %}" rel="stylesheet">
+  <link href="{% static 'oscar/css/owl.theme.css' %}" rel="stylesheet">
+  <link href="{% static 'oscar/icons/css/font-awesome.min.css' %}" rel="stylesheet">
+  <link href="{% static 'oscar/css/custom.css' %}" rel="stylesheet">
+  <script src="{% static 'oscar/js/jquery.min.js' %}"></script>
+
+  {% block favicon %}
+  <link rel="shortcut icon" href="{% static 'oscar/favicon.ico' %}" />
+  <link rel="shortcut icon" href="{% static 'oscar/groocy.ico' %}" />
+
+  {% endblock %}
+
+  {# Block where global CSS will go. #}
+  {% block styles %}{% endblock %}
+
+  {# Additional CSS - specific to certain pages #}
+  {% block extrastyles %}{% endblock %}
+
+  {% block extrahead %}{% endblock %}
+
+  {% block tracking %}
+  {# Default to using Google analytics #}
+  {% include "oscar/partials/google_analytics.html" %}
+  {% endblock %}
+</head>
+
+<body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
+
+  {# Main content goes in this 'layout' block #}
+  {% block layout %}{% endblock %}
+
+  {# Scripts loaded from a CDN. #}
+  {% block cdn_scripts %}
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+    window.jQuery || document.write('<script src="{% static "oscar/js/jquery/jquery.min.js" %}"><\/script>')
+  </script>
+
+  {% endblock %}
+
+  {# Local scripts #}
+  {% block scripts %}
+  {% endblock %}
+
+  {# Additional JS scripts #}
+  {% block extrascripts %}{% endblock %}
+
+  {# Block for body onload functions #}
+  <script>
+    $(function() {
+      {% block onbodyload %}
+      {% endblock %}
+    });
+  </script>
+
+  {# Page meta-data - this is populated by the 'metadata' template context processor #}
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+{% extends "oscar/layout.html" %}
+{% load i18n %}
+
+{% block title %}
+	{% trans 'register mobile' %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+	<ul class="breadcrumb">
+		<li>
+			<a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+		</li>
+		<li class="active">{% trans 'register mobile' %}</li>
+	</ul>
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div id="mobile_number_form_div">
+	<form action="http://localhost:8000/account/register_mobile/" method="post" id="mobile_number_form">
+		{% csrf_token %}
+		<label for="mobile_no">Mobile No: </label>
+		<br>
+		<input type="text" id="mobile_no" name="mobile_no">
+		<input type="submit" id="submitButtonMobile"  name="submitButtonMobile" value="Get OTP"  onclick="myFunction()">
+	</form>
+</div>
+<div id="otp_form_div" style="display: none;">
+	<form action="http://localhost:8000/account/register_mobile/verify_otp/" method="post" id="otp_form">
+		{% csrf_token %}
+		<label for="otp">OTP: </label>
+		<br>
+		<input type="text" id="otp" name="otp" >
+		<input type="submit" id="submitButtonOtp"  name="submitButtonOtp" value="Verify">
+	</form>
+</div>
+{% endblock content %}
+{% block extrascripts %}
+<script type='text/javascript'>
+	function myFunction() {
+	  var mobile_number_form_div = document.getElementById("otp_form_div");
+	  var otp_form_div = document.getElementById("mobile_number_form_div");
+
+	  if (mobile_number_form_div.style.display === "none") {
+		mobile_number_form_div.style.display = "block";
+		otp_form_div.style.display = "none";
+
+	  } else {
+		mobile_number_form_div.style.display = "none";
+	  }
+	}
+
+	/* attach a submit handler to the form */
+	$("#mobile_number_form").submit(function(event) {
+
+	  /* stop form from submitting normally */
+	  event.preventDefault();
+
+	  /* get the action attribute from the <form action=""> element */
+	  var $form = $( this ),
+		  url = $form.attr( 'action' );
+
+	  /* Send the data using post with element id name and name2*/
+	  var posting = $.post( url, { mobile: $('#mobile_no').val()} );
+
+	  /* Alerts the results */
+	  posting.done(function( data ) {
+		console.log('OTP Sent...');
+	  });
+
+	});
+
+	$("#otp_form").submit(function(event) {
+
+	  /* stop form from submitting normally */
+	  event.preventDefault();
+
+	  /* get the action attribute from the <form action=""> element */
+
+	  /* Send the data using post with element id name and name2*/
+	  var posting = $.post( 'http://localhost:8000/account/register_mobile/verify_otp/', { otp: $('#otp').val()} );
+
+	  /* Alerts the results */
+	  posting.done(function( data ) {
+		console.log('Verify Otp Send...');
+	  });
+
+	});
+
+</script>
+{% endblock %}

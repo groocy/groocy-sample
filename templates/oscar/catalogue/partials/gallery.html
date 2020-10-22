@@ -1,0 +1,56 @@
+{% load image_tags %}
+{% load i18n %}
+{% load static %}
+<div class="flex align-items-center">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css" integrity="sha512-X/RSQYxFb/tvuz6aNRTfKXDnQzmnzoawgEQ4X8nZNftzs8KFFH23p/BA6D2k0QCM4R0sY1DEy9MIY9b3fwi+bg==" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js" integrity="sha512-9CWGXFSJ+/X0LWzSRCZFsOPhSfm6jbnL+Mpqo0o8Ke2SYr8rCTqb4/wGm+9n13HtDE1NQpAEOrMecDZw4FXQGg==" crossorigin="anonymous"></script>
+
+  {% with all_images=product.get_all_images %}
+  {# use length rather then count as the images get queried anyways #}
+
+  {% if all_images|length > 1 %}
+
+  <div class=" product_gallery">
+    <div class="shop-detail-slider">
+      <div class="favourite-icon">
+        <a class="fav-btn" title="" data-placement="bottom" data-toggle="tooltip" href="#" data-original-title="59% OFF"><i class="mdi mdi-tag-outline"></i></a>
+      </div>
+      <div id="sync1" class="owl-carousel main-slide-img">
+        {% for image in all_images %}
+        {% oscar_thumbnail image.original "440x400" upscale=False as thumb %}
+        <div class="item text-center p-5"><img class="mx-auto img-fluid" src="{{ thumb.url }}" alt="{{ product.get_title }}"></div>
+        {%  endfor %}
+      </div>
+      <div id="sync2" class="owl-carousel">
+        {% for image in all_images %}
+        {% oscar_thumbnail image.original "440x400" upscale=False as thumb %}
+        <div class="item text-center"><img class="mx-auto img-fluid" src="{{ thumb.url }}" alt="{{ product.get_title }}"></div>
+        {%  endfor %}
+      </div>
+    </div>
+  </div>
+  {% else %}
+
+  {# Only one image to show #}
+  <div id="product_gallery" class="carousel">
+    <div class="thumbnail">
+      <div class="carousel-inner text-center">
+        <div class="carousel-item active">
+          {% with image=product.primary_image %}
+          {% oscar_thumbnail image.original "440x400" upscale=False as thumb %}
+          <img src="{{ thumb.url }}" class="d-block mx-auto img-fluid" alt="{{ product.get_title }}" />
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+  {% endwith %}
+    {% block extrascripts %}
+  <script defer src="{% static 'oscar/js/owl.carousel.js' %}"></script>
+
+  <script  src="{% static 'oscar/js/custom.js' %}"></script>
+  {% endblock %}
+
+</div>

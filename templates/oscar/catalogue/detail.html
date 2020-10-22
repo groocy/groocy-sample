@@ -1,0 +1,284 @@
+{% extends "oscar/layout.html" %}
+
+{% load history_tags %}
+{% load currency_filters %}
+{% load reviews_tags %}
+{% load staticfiles %}
+{% load product_tags %}
+{% load display_tags %}
+{% load i18n %}
+{% load purchase_info_tags %}
+
+{% block title %}
+{{ product.get_title }} | {{ block.super }}
+{% endblock %}
+
+{% block description %}
+{{ product.description|default:""|striptags }}
+{% endblock %}
+{% comment %}
+{% block breadcrumbs %}
+<ul class="breadcrumb bg-white pl-5 ">
+  <li class="breadcrumb-item">
+    <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+  </li>
+  {% with category=product.categories.all.0 %}
+  {% for c in category.get_ancestors_and_self %}
+  <li class="breadcrumb-item">
+    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+  </li>
+  {% endfor %}
+  <li class=" breadcrumb-item active">{{ product.get_title }}</li>
+
+  {% get_back_button as backbutton %}
+  {% if backbutton %}
+  <li class="pull-right breadcrumb-item">
+    <a href="{{ backbutton.url }}">
+      <i class="icon-arrow-left"></i> {{ backbutton.title }}
+    </a>
+  </li>
+  {% endif %}
+  {% endwith %}
+</ul>
+{% endblock %}
+{% endcomment %}
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+
+<article class="product_page">
+  <!-- Start of product page -->
+  <!-- <div class="container"> -->
+
+  <div class="row bg-white py-5">
+    {% block product_gallery %}
+    <div class="col-sm-5 offset-sm-1 bg-white  align-middle p-0 pb-3 ">
+      {% include "oscar/catalogue/partials/gallery.html" %}
+    </div>
+    {% endblock %}
+
+    {% block product_main %}
+    <div class="col-sm-5 ml-4 product_main card bg-white rounded ">
+      {% comment %}
+      This is a but clunky here. Better to have some kind of JS-driven dashboard menu that
+      pops out when clicked. A bit like the Django-Debug-Toolbar button
+      {% endcomment %}
+      {% if user.is_staff %}
+      <a class="pull-right text-right hidden-xs" href="{% url 'dashboard:catalogue-product' pk=product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
+      {% endif %}
+      <h2 class="h4 text-dark text-left">{{ product.get_title }}</h2>
+
+      {% block product_stock_record %}
+      {% include "oscar/catalogue/partials/stock_record.html" with verbose=1 %}
+      {% endblock %}
+
+      {% iffeature "reviews" %}
+      {% include "oscar/catalogue/reviews/partials/review_stars.html" %}
+      {% endiffeature %}
+
+      <h6 class="h6 font-weight-bold">DELIVERY & EXPRESS STORE PICK UP</h6>
+      <small class="h6">Enter your Pincode to check the delivery time and free pick up options</small>
+      <div class="row">
+
+        <div class="form row ml-3">
+          <input type="text" name="pincode" id="pin" class="form-control form-control-sm col">
+          <input type="submit" name="check" onclick="checkpin()" class="offset-1 col-3 btn font-weight-bold btn-secondary btn-sm" value="Check">
+        </div>
+
+      </div>
+      <div id="pincode_response" class="pincode_response_vaild"></div>
+      {% if not product.is_parent %}
+      {% block product_basket_form %}
+
+      {% include "oscar/catalogue/partials/add_to_basket_form.html" %}
+
+      {% endblock %}
+      {% else %}
+      {% block variants %}
+      <div class="card shadow-sm p-3">
+      <h2>{% trans 'Variants:' %}</h2>
+      {% for child in product.children.all %}
+      {% purchase_info_for_product request child as child_session %}
+      {% if child_session.availability.is_available_to_buy %}
+      <a href="{{ child.get_absolute_url }}">{{ child.get_title }}</a><br>
+      {% endif %}
+      {% endfor %}
+    </div>
+      {% endblock %}
+      {% endif %}
+    </div><!-- /col-sm-6 -->
+    {% endblock %}
+
+  </div><!-- /row -->
+  <!-- </div> -->
+
+  <hr>
+  <div class="row mt-5">
+    <div class="col-md-6 col-12 px-5 mx-auto px-5">
+
+      {% block product_description %}
+      {% if product.description %}
+      <div id="product_description" class="sub-header">
+        <h2 class="h4  text-muted font-weight-bold">{% trans "Product Description" %}</h2>
+      </div>
+      <p class="text-dark text-justify md-3">{{ product.description|safe }}</p>
+      <hr>
+      {% endif %}
+      {% endblock %}
+
+      {% iffeature "reviews" %}
+      {% block product_review %}
+      <section class="">
+        <div id="reviews" class="sub-header">
+          {% if product.num_approved_reviews > 3 %}
+          <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
+          {% endif %}
+          <h2 class="h4 text-muted font-weight-bold">{% trans "Customer Reviews" %}</h2>
+        </div>
+
+        {% if product.num_approved_reviews == 0 %}
+        <p>
+          {% if product|is_review_permitted:user %}
+          {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}
+          {% blocktrans %}This product does not have any reviews yet -
+          <a href="{{ add_review_url }}#addreview">be the first to write one</a>.
+          {% endblocktrans %}
+          {% else %}
+          {% trans "This product does not have any reviews yet" %}.
+          {% endif %}
+        </p>
+        {% else %}
+        <ol class="list-unstyled review-list">
+          {% for review in product.reviews.approved.all|slice:":3" %}
+          <li>
+            {% include 'oscar/catalogue/partials/review.html' %}
+          </li>
+          {% endfor %}
+        </ol>
+        {% endif %}
+      </section>
+      {% endblock product_review %}
+      {% endiffeature %}
+
+    </div>
+    <div class="col-md col mx-auto">
+      {% block product_info %}
+      <div class="sub-header pl-5">
+        <h2 class="h4  text-muted font-weight-bold">{% trans "Product Information" %}</h2>
+      </div>
+      <div class="table-responsive px-5">
+
+        <table class="table table-hover bg-white p-5 mt-3 rounded" style="border: 3px solid black;">
+          {% if product.upc %}
+          <tr>
+            <th>{% trans "UPC" %}</th>
+            <td>{{ product.upc }}</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <th>{% trans "Product Type" %}</th>
+            <td>{{ product.get_product_class.name }}</td>
+          </tr>
+
+          {% purchase_info_for_product request product as session %}
+          {% if session.price.exists %}
+          <tr>
+            <th>{% trans "Price (excl. tax)" %}</th>
+            <td>{{ session.price.excl_tax|currency:session.price.currency }}</td>
+          </tr>
+          {% if session.price.is_tax_known %}
+          <tr>
+            <th>{% trans "Price (incl. tax)" %}</th>
+            <td>{{ session.price.incl_tax|currency:session.price.currency }}</td>
+          </tr>
+          <tr>
+            <th>{% trans "Tax" %}</th>
+            <td>{{ session.price.tax|currency:session.price.currency }}</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <th>{% trans "Availability" %}</th>
+            <td>{{ session.availability.message }}</td>
+          </tr>
+          {% endif %}
+          {% for av in product.attribute_values.all %}
+          <tr>
+            <th>{{ av.attribute.name }}</th>
+            <td>{{ av.value_as_html }}</td>
+          </tr>
+          {% endfor %}
+          {% iffeature "reviews" %}
+          <tr>
+            <th>{% trans "Number of reviews" %}</th>
+            <td>{{ product.num_approved_reviews }}</td>
+          </tr>
+          {% endiffeature %}
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+  {% endblock %}
+
+  {% with recommended_products=product.sorted_recommended_products|slice:":6" %}
+
+  {% if recommended_products %}
+
+  <div class="sub-header">
+    <h2>{% trans "Recommended items" %}</h2>
+  </div>
+  <ul class="row">
+    {% for product in recommended_products %}
+    <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+      {% render_product product %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+
+  {% recently_viewed_products current_product=product %}
+
+</article><!-- End of product page -->
+<style type="text/css">
+  .pincode_response_vaild {
+    color: #009a00;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .pincode_response_invaild {
+    color: red;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+</style>
+<script type="text/javascript">
+  function checkpin() {
+    var pinArray = [452001, 452002];
+    var pincode = document.getElementById('pin').value;
+    var pin_respo = document.getElementById('pincode_response');
+    console.log(pincode);
+    if (pinArray.indexOf(parseInt(pincode)) !== -1) {
+      pin_respo.classList.remove('pincode_response_invaild');
+      pin_respo.classList.add('pincode_response_vaild');
+      pin_respo.innerHTML = "Yes, We deliver in "
+    } else {
+      pin_respo.classList.remove('pincode_response_vaild');
+      pin_respo.classList.add('pincode_response_invaild');
+      pin_respo.innerHTML = "Sorry We don't deliver in this Pin"
+    }
+  }
+</script>
+{% endblock content %}
+
+{% block extrascripts %}
+{{ block.super }}
+{% endblock %}
