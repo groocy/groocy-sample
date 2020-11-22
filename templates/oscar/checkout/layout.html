@@ -1,7 +1,7 @@
 {% extends "oscar/layout.html" %}
 {% load i18n %}
 {% load category_tags %}
-
+{% load static from staticfiles %}
 {% block layout %}
 
     <header class="header">
@@ -10,15 +10,22 @@
                 {% include "oscar/partials/brand.html" %}
             </div><!-- /row -->
         </div>
+        <br>
+        <div class="sub-header" style="display:block">
+                {% block thanku %}{% endblock %}
+        </div>
         {% block checkout_nav %}{% endblock %}
     </header><!-- /header -->
+
+
+
 
     <div class="container-fluid page">
        <div class="page_inner">
             {% include 'oscar/partials/alert_messages.html' %}
-
+                    <br>
             <div class="sub-header">
-                <h1>{% block checkout_title %}{% endblock %}</h1>
+                <h3>{% block checkout_title %}{% endblock %}</h3>
             </div>
 
             <!-- The main nav on checkout pages contain links to modal flatpages -->
