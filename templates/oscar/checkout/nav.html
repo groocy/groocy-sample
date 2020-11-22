@@ -1,9 +1,9 @@
 {% load i18n %}
 
-<div class="navbar navbar-static-top navbar-inverse nav-checkout">
-    <ul class="nav navbar-nav">
+<div class="navbar navbar-static-top navbar-inverse nav-checkout container" style="display:block">
+    <ul class="row">
         {% spaceless %}
-            <li class="step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+            <li class="col-sm step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
                 {% if step == 2 or step == 3 or step == 4 %}
                     <a href="{% url 'checkout:shipping-address' %}">
                         <span class="visible-inline-sm icon-chevron-right"></span>
@@ -18,7 +18,7 @@
                 {% endif %}
             </li>
 
-            <li class="step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+            <li class="col-sm step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
                 {% if step == 3 or step == 4 %}
                     <a href="{% url 'checkout:shipping-method' %}">
                         <span class="visible-inline-sm icon-chevron-right"></span>
@@ -33,7 +33,7 @@
                 {% endif %}
             </li>
 
-            <li class="step3 {% if step == 3 %}active{% else %}{% if step == 4 %}previous{% else %}{% if step > 3 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+            <li class="col-sm step3 {% if step == 3 %}active{% else %}{% if step == 4 %}previous{% else %}{% if step > 3 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
                 {% if step == 4 %}
                     <a href="{% url 'checkout:payment-details' %}">
                         <span class="visible-inline-sm icon-chevron-right"></span>
@@ -48,17 +48,33 @@
                 {% endif %}
             </li>
 
-            <li class="step4 {% if step == 4 %}active{% else %}disabled{% endif %} ">
+            <li class="col-sm step4 {% if step == 4 %}active{% else %}disabled{% endif %} ">
                 <span class="navbar-text">
                     {% trans "4. Preview" %}
                 </span>
             </li>
 
-            <li class="step5 {% if step == 5 %}active{% else %}disabled{% endif %} ">
+            <li class="col-sm step5 {% if step == 5 %}active{% else %}disabled{% endif %} ">
                 <span class="navbar-text">
                     {% trans "5. Confirmation" %}
                 </span>
             </li>
         {% endspaceless %}
     </ul><!-- /navbar-inner -->
+
+    <div class="progress my-auto">
+        {% if step == 1 %}
+        <div class="progress-bar progress-bar rounded" style="width: 20%" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        {% elif step == 2 %}
+        <div class="progress-bar progress-bar rounded" style="width: 40%" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        {% elif step == 3 %}
+        <div class="progress-bar progress-bar rounded" style="width: 60%" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        {% elif step == 4 %}
+        <div class="progress-bar progress-bar rounded" style="width: 80%" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        {% elif step == 5 %}
+        <div class="progress-bar progress-bar rounded" style="width: 100%" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        {% else %}
+        <div class="progress-bar progress-bar rounded" style="width: 0%" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        {% endif %}
+    </div>
 </div><!-- /navbar -->
